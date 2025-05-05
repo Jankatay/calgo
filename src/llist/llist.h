@@ -3,11 +3,6 @@
 
 #include <stdlib.h>
 
-// you can define higher or smaller values
-#ifndef _CALGO_DEFAULT_BUFSIZE
-#define _CALGO_DEFAULT_BUFSIZE 255
-#endif
-
 // automatically make a structure for forward linked list 
 #define STRUCT_LIST_FORWARD(name, type, defaultVal) \
 	struct calgoFList ## name { \
@@ -15,9 +10,6 @@
 		type data = defaultVal; \
 		int len = 0; \
 	}
-
-// cast custom fList to default fList.
-#define CALGO_FLIST(fList) (struct calgoFList*)&fList
 
 // automatically make a structure for double linked list
 #define STRUCT_LIST_DOUBLE(name, type, defaultVal) \
@@ -27,41 +19,33 @@
 		type data = defaultVal; \
 		int len = 0; \
 	}
-// cast custom dList to default dList.
-#define CALGO_DLIST(dList) (struct calgoDList*)dList
 
 // automatically make a structure for forward linked list of array types
-#define STRUCT_LIST_FORWARD_ARR(name, type, size) \
+#define STRUCT_LIST_FORWARD_ARR(name, type) \
 	struct calgoFListArr ## name { \
 		struct name* next; \
-		type data[size]; \
+		type* data = (type*)NULL; \
 	}
 
-// cast custom fListArr to default fListArr.
-#define CALGO_FLIST_ARR(fListArr) (struct calgoFListArr*)fListArr
-
 // automatically make a structure for double linked list of array types
-#define STRUCT_LIST_DOUBLE_ARR(name, type, size) \
+#define STRUCT_LIST_DOUBLE_ARR(name, type) \
 	struct calgoDListArr ## name { \
 		struct calgoDList ## name* next = NULL; \
 		struct calgoDList ## name* prev = NULL; \
-		type data[size]; \
+		type* data = (type*)NULL; \
 	}
 
-// cast custom dListArr to default dListArr.
-#define CALGO_DLIST_ARR(fDistArr) (struct calgoFDistArr*)fDistArr
-
-// forward linked int for int types
+// forward linked list for int types
 STRUCT_LIST_FORWARD(Int, int, 0);
 
-// forward linked int for int types
+// double linked list for int types
 STRUCT_LIST_DOUBLE(Int, int, 0);
 
-// forward linked int for arrays of int types
-STRUCT_LIST_FORWARD_ARR(ArrInt, int, _CALGO_DEFAULT_BUFSIZE);
+// forward linked list for arrays of int types
+STRUCT_LIST_FORWARD_ARR(Int, int);
 
-// forward linked int for arrays of int types
-STRUCT_LIST_DOUBLE_ARR(ArrInt, int, _CALGO_DEFAULT_BUFSIZE);
+// forward linked list for arrays of int types
+STRUCT_LIST_DOUBLE_ARR(Int, int);
 
 // forward linked list for double types
 STRUCT_LIST_FORWARD(Double, double, 0);
@@ -70,10 +54,10 @@ STRUCT_LIST_FORWARD(Double, double, 0);
 STRUCT_LIST_DOUBLE(Double, double, 0);
 
 // forward linked list for arrays of chars
-STRUCT_LIST_FORWARD_ARR(ArrDouble, double, _CALGO_DEFAULT_BUFSIZE);
+STRUCT_LIST_FORWARD_ARR(Double, double);
 
 // forward linked list for array of chars
-STRUCT_LIST_DOUBLE_ARR(ArrDouble, double, _CALGO_DEFAULT_BUFSIZE);
+STRUCT_LIST_DOUBLE_ARR(Double, double);
 
 // forward linked list for char types
 STRUCT_LIST_FORWARD(Char, char, 0);
@@ -82,10 +66,10 @@ STRUCT_LIST_FORWARD(Char, char, 0);
 STRUCT_LIST_DOUBLE(Char, char, 0);
 
 // forward linked list for an array of char types
-STRUCT_LIST_FORWARD_ARR(StrArr, char, _CALGO_DEFAULT_BUFSIZE);
+STRUCT_LIST_FORWARD_ARR(Str, char);
 
 // double linked list for an array of char types
-STRUCT_LIST_DOUBLE_ARR(StrArr, char, _CALGO_DEFAULT_BUFSIZE);
+STRUCT_LIST_DOUBLE_ARR(Str, char);
 
 // forward linked list for char* types
 STRUCT_LIST_FORWARD(StrPtr, char*, (char*)NULL);
@@ -100,15 +84,15 @@ STRUCT_LIST_FORWARD(Void, void*, NULL);
 STRUCT_LIST_DOUBLE(Void, void*, NULL);
 
 // forward linked list for an array of voidptr types
-STRUCT_LIST_FORWARD_ARR(ArrVoid, void*, _CALGO_DEFAULT_BUFSIZE);
+STRUCT_LIST_FORWARD_ARR(Void, void*);
 
 // double linked list for an array of voidptr types
-STRUCT_LIST_DOUBLE_ARR(ArrVoid, void*, _CALGO_DEFAULT_BUFSIZE);
+STRUCT_LIST_DOUBLE_ARR(Void, void*);
 
 // default forward linked list of array types
 struct calgoFListArr {
 	struct calgoFListArr* next = NULL;
-	int data = 0;
+	int* data = (int*)NULL;
 	int len = 0;
 };
 
@@ -116,7 +100,7 @@ struct calgoFListArr {
 struct calgoDListArr {
 	struct calgoDListArr* next = NULL;
 	struct calgoDListArr* prev = NULL;
-	int data = 0;
+	int* data = (int*)NULL;
 	int len = 0;
 };
 
@@ -135,28 +119,29 @@ struct calgoFList {
 	int len = 0;
 };
 
+// forward list of int type (default)
+struct calgoFList;
+
+// double list of int type (default)
+struct calgoDList;
+
 // returns index of max number in the calgoFList fList.
 int calgoFListMax(struct calgoFList* fList);
-
-// returns index of max number in the calgoFList fList using bigger function.
-int calgoFListMaxFunc(struct calgoFList* fList, int(*bigger)(void* elemA, void* elemB));
 
 // returns index of min number in the calgoFList fList.
 int calgoFListMin(struct calgoFList* fList);
 
-// returns index of min number in the calgoFList fList using smaller function.
-int calgoFListMinFunc(struct calgoFList* fList, int(*smaller)(void* elemA, void* elemB));
-
 // get index of max number in the calgoDList dList.
 int calgoDListMax(struct calgoDList* dlist);
-
-// returns index of max number in the calgoDList dList using smaller function.
-int calgoDListMaxFunc(struct calgoFList* dList, int(*bigger)(void* elemA, void* elemB));
 
 // get index of min number in the calgoDList dList.
 int calgoDListMin(struct calgoDList* dlist);
 
-// returns index of min number in the calgoDList dList using smaller function.
-int calgoDListMinFunc(struct calgoFList* dList, int(*smaller)(void* elemA, void* elemB));
+#ifndef DEV_MODE
+	#undef STRUCT_LIST_DOUBLE
+	#undef STRUCT_LIST_FORWARD
+	#undef STRUCT_LIST_FORWARD_ARR
+	#undef STRUCT_LIST_DOUBLE_ARR
+#endif 
 
 #endif

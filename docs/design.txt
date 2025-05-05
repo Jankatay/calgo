@@ -1,0 +1,7 @@
+I just wrote trying to imitate whatever I found cool with libraries like GTK4, and I hate my library already. So I added these design rules for myself to follow in future.
+
+1. Keep abstraction minimal. Macros give a workaround but too much sucks. Sorting char and int types would be the same function, but I won't be making that function work with void* or char* or such. In practice they would not come up that much anyway.
+
+2. Clever workarounds are shunned from now on. Anyone should be able to read some function and replicate a new one with their specifications. This is to make up for minimal abstraction.
+
+3. If any specific macros are used in header files, they will be undefined at the end to not bother LSP/autocorrect. Unless #define DEV_MODE is used before the other includes that is.
