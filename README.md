@@ -1,5 +1,7 @@
 # Description
 A simple library to for basic algorithms and data structures in C.  
+I am writing it to learn these concepts myself. This is not production ready, tho I will get as close as possible as part of the learning.
+
 
 Current progress: Just started.
 
